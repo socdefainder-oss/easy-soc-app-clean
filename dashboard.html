@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Easy SOC – Dashboard</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fb;
+    }
+
+    /* ------------------------- MENU SUPERIOR MOBILE ------------------------- */
+    .topbar {
+      width: 100%;
+      height: 60px;
+      background: #1a1f36;
+      color: white;
+      display: none; /* aparece só no mobile */
+      align-items: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .hamburger {
+      font-size: 26px;
+      cursor: pointer;
+      margin-right: 15px;
+    }
+
+    .topbar-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    /* ------------------------- SIDEBAR DESKTOP ------------------------- */
+    .sidebar {
+      width: 230px;
+      background: #1a1f36;
+      color: white;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 25px;
+    }
+
+    .sidebar a {
+      padding: 12px;
+      display: block;
+      text-decoration: none;
+      color: #c7d1e8;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      transition: 0.2s;
+    }
+
+    .sidebar a:hover {
+      background: #2a3048;
+      color: white;
+    }
+
+    .sidebar .active {
+      background: #4c8bfd;
+      color: white;
+    }
+
+    /* ------------------------- OVERLAY MOBILE ------------------------- */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.45);
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 900;
+    }
+
+    /* ------------------------- CONTEÚDO ------------------------- */
+    .content {
+      margin-left: 250px;
+      padding: 25px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      margin: 0;
+      margin-bottom: 10px;
+    }
+
+    .card .value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #0066ff;
+    }
+
+    canvas {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin-top: 30px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* ============================== MOBILE ============================== */
+    @media (max-width: 820px) {
+
+      .topbar {
+        display: flex;
+      }
+
+      /* Sidebar vira menu */
+      .sidebar {
+        transform: translateX(-250px);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      .content {
+        margin-left: 0 !important;
+        padding: 15px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .card .value {
+        font-size: 26px;
+      }
+
+      h1 {
+        font-size: 22px;
+        text-align: center;
+      }
+
+      canvas {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOPBAR MOBILE -->
+  <div class="topbar">
+    <div class="hamburger" onclick="abrirMenu()">☰</div>
+    <div class="topbar-title">Easy SOC</div>
+  </div>
+
+  <!-- OVERLAY MOBILE -->
+  <div class="overlay" id="overlay" onclick="fecharMenu()"></div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <h2>Easy SOC</h2>
+    <a id="menu-dashboard" class="active">Dashboard</a>
+    <a id="menu-maquinas">Máquinas</a>
+    <a id="menu-vulnerabilidades">Vulnerabilidades</a>
+    <a id="menu-riscos">Riscos</a>
+    <a id="menu-incidentes">Incidentes</a>
+    <a id="menu-relatorios">Relatórios</a>
+    <a id="menu-documentacoes">Documentações</a>
+    <a id="menu-noticias">Notícias</a>
+    <a id="menu-sair">Sair</a>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="content">
+    <h1>Visão Geral</h1>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Máquinas Totais</h3>
+        <div id="c-total" class="value">0</div>
+      </div>
+
+      <div class="card">
+        <h3>Máquinas Seguras</h3>
+        <div id="c-seguras" class="value">0</div>
+      </div>
+
+      <div class="card">
+        <h3>Vulnerabilidades</h3>
+        <div id="c-vuln" class="value">0</div>
+      </div>
+
+      <div class="card">
+        <h3>Riscos</h3>
+        <div id="c-riscos" class="value">0</div>
+      </div>
+
+      <div class="card">
+        <h3>Incidentes</h3>
+        <div id="c-inc" class="value">0</div>
+      </div>
+    </div>
+
+    <canvas id="grafico"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/dashboard.js"></script>
+
+  <script>
+    function abrirMenu() {
+      document.getElementById("sidebar").classList.add("open");
+      document.getElementById("overlay").classList.add("show");
+    }
+
+    function fecharMenu() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("overlay").classList.remove("show");
+    }
+
+    // LINKS
+    document.getElementById("menu-dashboard").onclick = () => location.href = "dashboard.html";
+    document.getElementById("menu-maquinas").onclick = () => location.href = "maquinas.html";
+    document.getElementById("menu-vulnerabilidades").onclick = () => location.href = "vulnerabilidades.html";
+    document.getElementById("menu-riscos").onclick = () => location.href = "riscos.html";
+    document.getElementById("menu-incidentes").onclick = () => location.href = "incidentes.html";
+    document.getElementById("menu-relatorios").onclick = () => location.href = "relatorios.html";
+    document.getElementById("menu-documentacoes").onclick = () => location.href = "documentacoes.html";
+    document.getElementById("menu-noticias").onclick = () => location.href = "noticias.html";
+    document.getElementById("menu-sair").onclick = () => { localStorage.clear(); location.href = "index.html"; };
+  </script>
+
+</body>
+</html>

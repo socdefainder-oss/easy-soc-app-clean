@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notícias — Easy SOC</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fb;
+    }
+
+    /* ========================= TOPBAR ========================= */
+    .topbar {
+      width: 100%;
+      height: 60px;
+      background: #1a1f36;
+      color: white;
+      display: none;
+      align-items: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .hamburger {
+      font-size: 26px;
+      cursor: pointer;
+      margin-right: 15px;
+    }
+
+    .topbar-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    /* ========================= SIDEBAR ========================= */
+    .sidebar {
+      width: 230px;
+      background: #1a1f36;
+      color: white;
+      height: 100vh;
+      padding: 20px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      box-sizing: border-box;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 25px;
+    }
+
+    .sidebar a {
+      padding: 12px;
+      text-decoration: none;
+      display: block;
+      color: #c7d1e8;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .sidebar a:hover {
+      background: #2a3048;
+      color: white;
+    }
+
+    .active {
+      background: #4c8bfd !important;
+      color: white !important;
+    }
+
+    /* ========================= OVERLAY (MOBILE) ========================= */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.45);
+      z-index: 900;
+    }
+
+    /* ========================= CONTEÚDO ========================= */
+    .content {
+      margin-left: 250px;
+      padding: 25px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    .noticia-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      margin-bottom: 18px;
+    }
+
+    .noticia-card h3 {
+      margin: 0 0 10px;
+    }
+
+    .noticia-card p {
+      margin: 0;
+      color: #555;
+    }
+
+    /* ========================= RESPONSIVO ========================= */
+    @media (max-width: 820px) {
+
+      .topbar {
+        display: flex;
+      }
+
+      .sidebar {
+        transform: translateX(-250px);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      .content {
+        margin-left: 0;
+        padding: 15px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOPBAR MOBILE -->
+  <div class="topbar">
+    <div class="hamburger" onclick="abrirMenu()">☰</div>
+    <div class="topbar-title">Notícias</div>
+  </div>
+
+  <div id="overlay" class="overlay" onclick="fecharMenu()"></div>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar" class="sidebar">
+    <h2>Easy SOC</h2>
+
+    <a href="dashboard.html">Dashboard</a>
+    <a href="maquinas.html">Máquinas</a>
+    <a href="vulnerabilidades.html">Vulnerabilidades</a>
+    <a href="riscos.html">Riscos</a>
+    <a href="incidentes.html">Incidentes</a>
+    <a href="relatorios.html">Relatórios</a>
+    <a href="documentacoes.html">Documentações</a>
+    <a class="active">Notícias</a>
+    <a id="menu-sair">Sair</a>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="content">
+    <h1>Notícias</h1>
+
+    <div class="noticia-card">
+      <h3>Atualizações de Segurança</h3>
+      <p>Últimas notícias sobre vulnerabilidades e patches importantes.</p>
+    </div>
+
+    <div class="noticia-card">
+      <h3>Alertas Recentes</h3>
+      <p>Ocorrências críticas que impactam pequenas e médias empresas.</p>
+    </div>
+
+    <div class="noticia-card">
+      <h3>Relatórios do Setor</h3>
+      <p>Tendências, ataques e estatísticas relevantes no mercado.</p>
+    </div>
+  </div>
+
+  <script>
+    function abrirMenu() {
+      document.getElementById("sidebar").classList.add("open");
+      document.getElementById("overlay").classList.add("show");
+    }
+
+    function fecharMenu() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("overlay").classList.remove("show");
+    }
+
+    document.getElementById("menu-sair").onclick = () => {
+      localStorage.clear();
+      window.location.href = "index.html";
+    };
+  </script>
+
+</body>
+</html>
